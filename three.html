@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WFS example</title>
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://openlayers.org/en/v3.6.0/css/ol.css" type="text/css">
+<script src="http://openlayers.org/en/v3.6.0/build/ol.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div id="map" class="map"></div>
+  </div>
+</div>
+
+</div>
+<script>
+
+// format used to parse WFS GetFeature responses
+var geojsonFormat = new ol.format.GeoJSON();
+
+var vectorSource = new ol.source.Vector({
+  loader: function(extent, resolution, projection) {
+    var url = 'http://geoserver-rls.imas.utas.edu.au/geoserver/RLS/ows?service=WFS&' +
+        'version=1.1.0&request=GetFeature&typename=RLS:SiteList&' +
+        'outputFormat=text/javascript&format_options=callback:loadFeatures&srsname=EPSG:3857' 
+        //+ '&bbox=' + extent.join(',') + ',EPSG:3857';
+	// use jsonp: false to prevent jQuery from adding the "callback"
+    // parameter to the URL
+    $.ajax({url: url, dataType: 'jsonp', jsonp: false});		
+  }
+});
+
+/**
+ * JSONP WFS callback function.
+ * @param {Object} response The response object.
+ */
+loadFeatures = function(response) {
+  vectorSource.addFeatures(geojsonFormat.readFeatures(response));
+  console.log('just')
+  console.log(vectorSource.getFeatures())
+};
+
+
+var vector = new ol.layer.Vector({
+  source: vectorSource,
+  style: new ol.style.Circle({
+	fill: new ol.style.Fill({color:'rgba(0, 0, 255, 1.0)'})
+	,radius: 10
+
+  })
+});
+
+var raster = new ol.layer.Tile({
+  source: new ol.source.MapQuest({layer: 'sat'})
+});
+
+var map = new ol.Map({
+  layers: [raster, vector],
+  target: document.getElementById('map'),
+  view: new ol.View({
+    center: [-41, 142],
+    zoom: 5,
+  })
+});
+
+</script>
+</body>
+</html>

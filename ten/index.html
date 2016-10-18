@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+<style>
+.map:-moz-full-screen {
+  height: 100%;
+}
+.map:-webkit-full-screen {
+  height: 100%;
+}
+.map:-ms-fullscreen {
+  height: 100%;
+}
+.map:fullscreen {
+  height: 100%;
+}
+.ol-rotate {
+  top: 3em;
+}
+
+</style>
+    
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="http://openlayers.org/en/v3.10.1/build/ol.js" type="text/javascript"></script>	
+<link rel="stylesheet" href="http://openlayers.org/en/v3.10.1/css/ol.css" type="text/css">	
+    <title>RLS Mapping Trial</title>
+
+  </head>
+  <body>
+
+<div class="container-fluid">
+    <h2>MapQuest satellite, Clustering, ol 3.10.1, Surveys</h2>
+	<ul>
+	<li>Wraps both base and clusters. </li>
+	<li>Zoom is maxed at level 12 (which is where the tile resolution of the MapQuest Satellite layer appears to run out). </li>
+	<li>has full screen</li>
+	<li>Uses unadvertised layer "SurveyList"</li>
+	</ul>
+<div class="row-fluid">
+  <div class="span12">
+    <div id="map" class="map"></div>
+  </div>
+</div>
+<div class="btn-group">
+  <button type="button" class="btn btn-default" id="y2006" onclick="alert('just')">2006</button>
+  <button type="button" class="btn btn-default" id="y2007">2007</button>
+  <button type="button" class="btn btn-default" id="y2008">2008</button>
+  <button type="button" class="btn btn-default" id="y2009">2009</button>
+  <button type="button" class="btn btn-default" id="y2010">2010</button>
+  <button type="button" class="btn btn-default" id="y2011">2011</button>
+  <button type="button" class="btn btn-default" id="y2012">2012</button>
+  <button type="button" class="btn btn-default" id="y2013">2013</button>
+  <button type="button" class="btn btn-default" id="y2014">2014</button>
+  <button type="button" class="btn btn-default" id="y2015">2015</button>
+</div>
+
+</div>
+    <script type="text/javascript" src="map.js"></script>
+  </body>
+</html>

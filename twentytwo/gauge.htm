@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.11.2/dijit/themes/claro/claro.css">	
+	<script>dojoConfig = {parseOnLoad: true}</script>
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>	
+<script>
+dojo.require('dijit.form.Button');
+dojo.require('dojox.gauges.GlossySemiCircularGauge');
+makeGauge = function(){
+    var glossyCircular = new dojox.gauges.GlossySemiCircularGauge({
+        background: [255, 255, 255, 0],
+        title: 'Value',
+        id: "glossyGauge",
+	min: 0,
+	max: 5,
+	majorTicksInterval: 1,
+	value: "4.4",
+        width: 300,
+        height: 300,
+	noChange: true
+    }, dojo.byId("SemiCircularGauge"));
+    glossyCircular.startup();
+};
+dojo.ready(makeGauge );
+	</script>
+</head>
+<body class="claro">
+    <div id="SemiCircularGauge" ></div>
+</body>
+</html>
