@@ -78,8 +78,13 @@ d3.csv(dataurl, function(data) {
     .enter().append("rect")
       .attr("class", "bar")
       .attr("x", function(d) { return x(d.key); })
-      .attr("y", function(d) { return y(d.value); })
       .attr("width", x.bandwidth())
+      .attr("y", function (d, i) { return height; })
+      .attr("height", 0)
+      .transition()
+      .duration(200)
+	  .delay(function (d, i) { return i * 50; })  
+      .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); });
     
 
