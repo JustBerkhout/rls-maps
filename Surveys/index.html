@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x path {
+/*  display: none;*/
+}
+    
+svg text.label {
+  fill: white;
+  font-family: sans-serif;
+  font-size: 9pt;  
+  font-weight: 400;
+  text-anchor: middle;
+}
+
+</style>
+<svg width="960" height="500"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<script>
+var svg = d3.select("svg"),
+    margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom;  
+    
+var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+    y = d3.scaleLinear().rangeRound([height, 0]);
+
+var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var dataurl = 'SurveyList.csv'    
+    
+d3.csv(dataurl, function(data) {
+    return {
+    yr : data.SurveyDate.substring(0, 4)
+  };
+}, function(error, rawData) {
+  if (error) throw error;
+
+  var data = d3.nest()
+    .key(function(d) { return d.yr; })
+    .rollup(function(v) { return v.length; })
+    .entries(rawData)
+    .sort(function(a, b) { return d3.ascending(a.key, b.key); });
+    
+  x.domain(data.map(function(d) { return d.key; }));
+  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y))
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text("Number of Surveys");
+    
+//console.log (JSON.stringify(data));
+    
+  g.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.key); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.value); });
+    
+
+// Controls the text labels at the top of each bar. 
+	g.selectAll(".text")  		
+	  .data(data)
+	  .enter()
+	  .append("text")
+	  .attr("class","label")
+	  .text(function(d) { return d.value; })
+      .attr("x", function(d,i) { return x(d.key) + x.bandwidth() / 2; })    
+      .attr("y", function(d) { return y(d.value) + 15; });     
+
+    
+});    
+    
+</script>
