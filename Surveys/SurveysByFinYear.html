@@ -41,20 +41,31 @@ var g = svg.append("g")
 var dataurl = 'SurveyList.csv'    
     
 d3.csv(dataurl, function(data) {
-    return {
-    yr : data.SurveyDate.substring(0, 4)
-  };
+    var myDate = new Date(data.SurveyDate);
+   var mon = myDate.getMonth();
+   var yr = myDate.getFullYear();
+   var finYear = '';
+    
+    
+    //<6 --> before July
+   if (mon<6) { finYear = (yr-1).toString() + '-' +  yr.toString().substring(2,4) }
+   else { finYear = yr.toString() + '-' +  (yr+1).toString().substring(2,4) }
+   
+    
+    return { yr : finYear };
+    
 }, function(error, rawData) {
   if (error) throw error;
 
   var data = d3.nest()
     .key(function(d) { return d.yr; })
+    .sortKeys(d3.ascending)
     .rollup(function(v) { return v.length; })
-    .entries(rawData)
-    .sort(function(a, b) { return d3.ascending(a.key, b.key); });
+    .entries(rawData);
+    
     
   x.domain(data.map(function(d) { return d.key; }));
-  y.domain([0, d3.max(data, function(d) { return d.value; })]).nice();
+  y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
   g.append("g")
       .attr("class", "axis axis--x")
@@ -82,7 +93,7 @@ d3.csv(dataurl, function(data) {
       .attr("y", function (d, i) { return height; })
       .attr("height", 0)
       .transition()
-      .duration(200)
+      .duration(100)
 	  .delay(function (d, i) { return i * 50; })  
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); });
