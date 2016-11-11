@@ -38,7 +38,7 @@ var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var dataurl = 'SurveyList.csv'    
+var dataurl = '../data/SurveyList.csv'    
     
 d3.csv(dataurl, function(data) {
     return {
